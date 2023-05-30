@@ -1,0 +1,181 @@
+<html>
+<head>
+<title>Calendar</title>
+<script language="javascript">
+function createRequestObject() {
+	FORM_DATA = new Object();
+	separator = ',';
+	query = '' + this.location;
+	query = query.substring((query.indexOf('?')) + 1);
+	if (query.length < 1) { return false; }
+	keypairs = new Object();
+	numKP = 1;
+	while (query.indexOf('&') > -1) {
+		keypairs[numKP] = query.substring(0,query.indexOf('&'));
+		query = query.substring((query.indexOf('&')) + 1);
+		numKP++;
+	}
+
+	keypairs[numKP] = query;
+	for (i in keypairs) {
+		keyName = keypairs[i].substring(0,keypairs[i].indexOf('='));
+		keyValue = keypairs[i].substring((keypairs[i].indexOf('=')) + 1);
+		while (keyValue.indexOf('+') > -1) {
+			keyValue = keyValue.substring(0,keyValue.indexOf('+')) + ' ' + keyValue.substring(keyValue.indexOf('+') + 1);
+		}
+    
+		keyValue = unescape(keyValue);
+      
+		if (FORM_DATA[keyName]) {
+			FORM_DATA[keyName] = FORM_DATA[keyName] + separator + keyValue;
+		} else {
+			FORM_DATA[keyName] = keyValue;
+		}
+	}
+	return FORM_DATA;
+}
+FORM_DATA = createRequestObject();
+//==========================================
+function getCurntDate() {
+	var temp;
+	var arr = document.cookie.toString().split(";");
+	for (var i=0; i < arr.length; i++) {
+		if (arr[i].length > 1) {
+			if (arr[i].indexOf("=")) {
+				temp = arr[i].split("=");
+				if (temp[0] == "curntDate") {
+					curntDate = temp[1];
+				}
+			}
+		}
+	}
+	if (curntDate.length > 0) {
+		curntDate = new Date(curntDate);
+	}
+}
+curntDate = "";
+formelement = "DateIn";
+formname = "resform";
+getCurntDate();
+for (i in FORM_DATA) {
+	if (i == "curntdate" || i == "curntDate") {
+		curntDate = FORM_DATA[i];
+		curntDate = new Date(curntDate);
+	}else if (i == "formelement") {
+		formelement = FORM_DATA[i];
+	}else if (i == "formname") {
+		formname = FORM_DATA[i];
+	}
+}
+sURL = "&formname=" + formname + "&formelement=" + formelement;
+if (!curntDate) {
+	curntDate = new Date();
+}
+//==========================================
+firstDate = new Date(curntDate.getFullYear(),curntDate.getMonth(),1);
+lastMonth = new Date(curntDate.getFullYear(),curntDate.getMonth()-1,1);
+nextMonth = new Date(curntDate.getFullYear(),curntDate.getMonth()+1,1);
+offSet   = firstDate.getDay() + 1;
+lastSlot = offSet + ((nextMonth - firstDate)/(3600*24*1000)) - 1;
+lastSlot = Math.round(lastSlot);
+calWeeks = Math.ceil(lastSlot/7);
+calDays  = calWeeks * 7;
+day = 1;
+
+function return_date(zzz){
+    var dateStr = (curntDate.getMonth()+1) + "/" + zzz + "/" + curntDate.getFullYear();
+    window.parent.postMessage(dateStr, '*');
+}
+
+function jump(d){
+	location.href="calendar.html?curntdate=" + d.mm[d.mm.selectedIndex].value + "/1/" + d.yy[d.yy.selectedIndex].value + sURL;
+}
+fullMonth = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+today = new Date();
+</script>
+<style><!--
+A.bb {color:333333;text-decoration:none;}A.bb:visited{color:333333;}A.bb:hover{color:333333;text-decoration:underline;}
+	a.cc {color:#333333;text-decoration:none;}a.cc:visited{color:#333333;}a.cc:hover{color:#333333;text-decoration:none;font-size:20px;}
+	.sm {font-size:20px; width: 50%;
+    height: 100%;}
+//-->
+    .responsive-image {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+</head>
+<body marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+<center>
+
+
+<form>
+<img class="responsive-image" src="https://dazzlersanisidro.com/wp-content/uploads/2020/04/dazzler-logo-dark.png" style="max-width: 200px; margin-bottom: 5px;">
+<table border="0" width="100%" height="100%">
+<tr align="center">
+	<script language="javascript">
+		document.write("<td width=12><font size=2 face=arial,helvetica><b><a href='calendar.html?curntdate=" + (lastMonth.getMonth()+1) + "/1/" + lastMonth.getFullYear() + sURL + "' class=cc><</a></b></font></td>");
+	</script>
+
+	<td colspan=5><select name="mm" class="sm" onChange="jump(this.form)">
+	<script language="javascript">
+		for (i=0; i < fullMonth.length; i++) {
+			if (i==curntDate.getMonth()){
+				document.write('<option value=' + (i+1) +' SELECTED>' + fullMonth[i]);
+			}else{
+				document.write('<option value=' + (i+1) +'>' + fullMonth[i]);
+			}
+		}
+	</script>
+	</select><select name="yy" class="sm" onChange="jump(this.form)">
+	<script language="javascript">
+		for (i=today.getFullYear(); i < today.getFullYear()+4; i++) {
+			if (i==curntDate.getFullYear()){
+				document.write('<option value=' + i +' SELECTED>' + i);
+			}else{
+				document.write('<option value=' + i +'>' + i);
+			}
+		}
+	</script>
+	</select>
+</td>
+
+	<script language="javascript">
+		document.write("<td width=12><font size=2 face=arial,helvetica><b><a href='calendar.html?curntdate=" + (nextMonth.getMonth()+1) + "/1/" + nextMonth.getFullYear() + sURL + "' class=cc>></a></b></font></td>");
+	</script>
+</tr>
+<tr align="center" bgcolor="#333333">
+<td bgcolor="#333333"><font size="1" face="arial,helvetica" color="#ffffff">S</font></td>
+<td bgcolor="#333333"><font size="1" face="arial,helvetica" color="#ffffff">M</font></td>
+<td bgcolor="#333333"><font size="1" face="arial,helvetica" color="#ffffff">T</font></td>
+<td bgcolor="#333333"><font size="1" face="arial,helvetica" color="#ffffff">W</font></td>
+<td bgcolor="#333333"><font size="1" face="arial,helvetica" color="#ffffff">T</font></td>
+<td bgcolor="#333333"><font size="1" face="arial,helvetica" color="#ffffff">F</font></td>
+<td bgcolor="#333333"><font size="1" face="arial,helvetica" color="#ffffff">S</font></td>
+</tr>
+<tr align="center" valign="top">
+<script language="javascript">
+for (i=1; i<=calDays; i++) {
+	if (i >= offSet && i <= lastSlot) {
+		if (curntDate.getFullYear() > today.getFullYear() || (curntDate.getFullYear()==today.getFullYear() && curntDate.getMonth() > today.getMonth()) || (curntDate.getFullYear()==today.getFullYear() && curntDate.getMonth()==today.getMonth() && day >= today.getDate())){
+			document.write("<td bgcolor=#cccccc width=20><font size=5 face=arial,helvetica><a href='javascript:return_date(" + day + ")' class=bb>" + day + "</a></font></td>");
+		}else{
+			document.write("<td bgcolor=#EEEEEE width=20><font size=5 face=arial,helvetica color=999999>" + day + "</font></td>");
+		}
+		day++;
+	} else {
+		document.write("<td bgcolor=#eeeeee width=20></td>");
+	}
+
+	if (i%7 == 0) {
+    	document.write("</tr><tr align=center>");
+	}
+}
+</script>
+<td colspan="7"></td>
+</tr>
+</table>
+</form>
+</center>
+</body>
+</html>
