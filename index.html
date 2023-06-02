@@ -1,7 +1,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-<button id="show-resform-button" onclick="showResForm()">Buscar disponibilidad ^</button>
+<button id="show-resform-button" onclick="showResForm()">Reservar ahora ^</button>
 
 <div id="calendarModal"
     style="display:none;position:fixed;z-index:99999;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.4);">
@@ -13,14 +13,18 @@
 </div>
 
 <form action="https://reservations.travelclick.com/115282" method="get" name="resform" id="resform" target="_blank">
+    <img id="logo-form" src="https://i.imgur.com/If4HaOv.png" alt="Logo">
     <button id="close-resform-button" onclick="event.preventDefault(); hideResForm();">X</button>
     <input type="hidden" name="HotelID" value="115282" />
     <input type="hidden" name="LanguageID" value="1" />
     <input type="hidden" name="Rooms" value="1" />
+<div id="reservation-text">Make a Reservation</div>
     Check-In Date:
     <input name="DateIn" type="text" onclick="openCalendarFromInput()" readonly />
     <a href="javascript:openCalendar('DateIn')"><img src="calendar.gif" width="20" height="20" border="0" /></a>
-    Nights:
+<div class="flex-container">
+    <div class="select-container">
+    <div class="select-label">Nights:</div>
     <select name="Length">
         <option value="1" selected="selected">1</option>
         <option value="2">2</option>
@@ -37,14 +41,18 @@
         <option value="10">13</option>
         <option value="10">14</option>
     </select>
-    Adults:
+    </div>
+    <div class="select-container">
+      <div class="select-label">Adults:</div>
     <select name="Adults">
         <option value="1" selected="selected">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
         <option value="4">4</option>
     </select>
-    Children:
+    </div>
+    <div class="select-container">
+      <div class="select-label">Children:</div>
     <select name="Children">
         <option value="0" selected="selected">0</option>
         <option value="1">1</option>
@@ -52,6 +60,8 @@
         <option value="3">3</option>
         <option value="4">4</option>
     </select>
+    </div>
+</div>
     <input type="submit" value="Submit" />
 </form>
 
@@ -9363,7 +9373,7 @@
         flex-wrap: wrap;
         z-index: 999;
     }
-
+ 
     #resform input[type="text"],
     #resform .dropdown-button {
         padding: 10px;
@@ -9382,7 +9392,7 @@
         background-color: #FFD100;
         color: #141E28;
         cursor: pointer;
-        margin: 10px;
+        margin: 20px;
         font-size: 1.2em;
     }
 
@@ -9417,11 +9427,58 @@
     }
 
     @media (max-width: 600px) {
+      
+    #reservation-text {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+    background-color: #FFFFFF73;
+    padding: 10px;
+    width: 100%;
+}
+      
+    #resform input[type="submit"] {
+        width: -webkit-fill-available; 
+}
+
+   #resform input[type="text"],
+    #resform .dropdown-button {
+        width: -webkit-fill-available; 
+}
+      
+    .flex-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+ .select-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    margin-right: 10px;  /* Agrega este */
+}
+      
+    #reservation-title {
+        width: 100%;
+        text-align: center;
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+      
+    .select-container span {
+        margin-bottom: 5px;
+    }
+      
         #resform {
             display: none;
             position: fixed;
             left: 0;
             right: 0;
+            height: 100%;
             width: auto;
             z-index: 1000;
             flex-direction: column;
@@ -9448,12 +9505,23 @@
             cursor: pointer;
             z-index: 1001;
         }
+      
+    #logo-form {
+        position: absolute;
+      padding: 20px;
+        top: 20px;
+        left: 10px;
+    }
 
         #close-resform-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
             display: none;
             top: 10px;
             right: 10px;
             background: none;
+          padding: 1px;
             border: none;
             color: white;
             font-size: 3em;
@@ -9468,11 +9536,39 @@
             right: 5%;
             width: 90%;
         }
+      
+    .select-label {
+        margin-right: 10px;  /* ajusta este valor según tus necesidades */
+      color: white;
+    }
 
         #show-resform-button,
         #close-resform-button {
             display: none;
         }
+      
+     .flex-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+.select-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 30px; /* Aumenta este valor */
+}         
+
+      #reservation-text {
+        display: none;
+      }
+
+    .select-container span {
+        margin-right: 10px;
+    }
     }
 
     #modal {
@@ -9489,4 +9585,7 @@
         width: 100%;
         height: auto;
     }
+
+
+
 </style>
